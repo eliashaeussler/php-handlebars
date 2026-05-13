@@ -20,6 +20,7 @@ final class RuntimeContext
         public array $helpers = [],
         public array $partials = [],
         public ?Closure $partialResolver = null,
+        public ?Closure $variableResolver = null,
         public array $inlinePartials = [],
         public array $depths = [],
         public array $data = [],

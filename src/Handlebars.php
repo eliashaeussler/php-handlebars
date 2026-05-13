@@ -12,6 +12,7 @@ use DevTheorem\HandlebarsParser\ParserFactory;
  *     helpers?: array<Closure>,
  *     partials?: array<Closure>,
  *     partialResolver?: Closure(string): ?Closure,
+ *     variableResolver?: Closure(mixed, string): mixed,
  * }
  * @phpstan-type Template Closure(mixed=, RenderOptions=): string
  */

@@ -181,6 +181,7 @@ final class Runtime
                 helpers: $parentCx->helpers,
                 partials: $parentCx->partials,
                 partialResolver: $parentCx->partialResolver,
+                variableResolver: $parentCx->variableResolver,
                 inlinePartials: $parentCx->inlinePartials,
                 depths: $parentCx->depths,
                 data: $data,
@@ -192,6 +193,7 @@ final class Runtime
             helpers: array_replace(Runtime::defaultHelpers(), $options['helpers'] ?? []),
             partials: $options['partials'] ?? [],
             partialResolver: $options['partialResolver'] ?? null,
+            variableResolver: $options['variableResolver'] ?? null,
             data: $data,
         );
     }
@@ -211,9 +213,13 @@ final class Runtime
      * (PHP equivalent of JS fn.call(context), where context binds as `this` with no positional args).
      * When $strict is true, throws for missing keys.
      */
-    public static function lookupValue(mixed &$_this, string $name, bool $strict = false): mixed
+    public static function lookupValue(RuntimeContext $cx, mixed &$_this, string $name, bool $strict = false): mixed
     {
-        $v = $strict ? self::strictLookup($_this, $name, $name) : ($_this[$name] ?? null);
+        if ($cx->variableResolver !== null) {
+            $v = ($cx->variableResolver)($_this, $name);
+        } else {
+            $v = $strict ? self::strictLookup($_this, $name, $name) : ($_this[$name] ?? null);
+        }
         return $v instanceof Closure ? $v($_this) : $v;
     }
 

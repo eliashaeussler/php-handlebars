@@ -340,7 +340,7 @@ final class Compiler
         if ($isSimplePath && $condExpr->data) {
             $val = self::getRuntimeFunc('lambda', $this->compileExpression($condExpr));
         } elseif ($isSimplePath && !self::scopedId($condExpr) && $this->lookupBlockParam($part) === null) {
-            $val = self::getRuntimeFunc('lookupValue', '$in, ' . self::quote($part));
+            $val = self::getRuntimeFunc('lookupValue', '$cx, $in, ' . self::quote($part));
         } else {
             $savedHelperArgs = $this->compilingHelperArgs;
             $this->compilingHelperArgs = true;
@@ -486,7 +486,7 @@ final class Compiler
         // matching HBS.js container.lambda which also passes no positional arguments.
         if ($path instanceof PathExpression) {
             if ($helperName !== null && !$path->data && $this->options->knownHelpersOnly && !$this->options->compat) {
-                $cvArgs = '$in, ' . self::quote($helperName) . ($this->options->strict ? ', true' : '');
+                $cvArgs = '$cx, $in, ' . self::quote($helperName) . ($this->options->strict ? ', true' : '');
                 return self::getRuntimeFunc($fn, self::getRuntimeFunc('lookupValue', $cvArgs));
             }
             $expression = $this->PathExpression($path);
